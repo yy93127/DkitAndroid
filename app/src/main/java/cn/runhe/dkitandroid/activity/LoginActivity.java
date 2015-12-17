@@ -25,6 +25,7 @@ import cn.runhe.dkitandroid.domain.LoginUserInfo;
 import cn.runhe.dkitandroid.utils.Constant;
 import cn.runhe.dkitandroid.utils.HttpUtil;
 import cn.runhe.dkitandroid.utils.LogUtil;
+import cn.runhe.dkitandroid.utils.SPUtil;
 import cn.runhe.dkitandroid.utils.ToastUtil;
 
 /**
@@ -48,6 +49,11 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String value = SPUtil.getString(LoginActivity.this, Constant.SP_NAME_LOGIN);
+        if (!TextUtils.isEmpty(value)) {
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            finish();
+        }
         setContentView(R.layout.activity_login);
 
         httpUtil = new HttpUtil();
@@ -166,8 +172,9 @@ public class LoginActivity extends Activity {
             LogUtil.i(LoginActivity.this, "登陆返回：" + result);
             LoginUserInfo loginUserInfo = gson.fromJson(result.substring(1, result.length() - 1), LoginUserInfo.class);
             if (null != loginUserInfo) {
-                ToastUtil.showToast(LoginActivity.this,"登陆成功");
-                startActivity(new Intent(LoginActivity.this,ProjectActivity.class));
+                ToastUtil.showToast(LoginActivity.this, "登陆成功");
+                SPUtil.putString(LoginActivity.this, Constant.SP_NAME_LOGIN, result.substring(1, result.length() - 1));
+                startActivity(new Intent(LoginActivity.this,MainActivity.class));
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

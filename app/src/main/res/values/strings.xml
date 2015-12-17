@@ -16,4 +16,9 @@
         completions."
     </string>
     <string name="project_list">项目列表</string>
+    <string name="title_activity_bug_list">BugListActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

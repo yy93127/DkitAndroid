@@ -1,5 +1,6 @@
 package cn.runhe.dkitandroid.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -150,6 +151,13 @@ public class ProjectActivity extends AppCompatActivity {
             projectName = (TextView) itemView.findViewById(R.id.tv_projectname);
             version = (TextView) itemView.findViewById(R.id.tv_version);
             createTime = (TextView) itemView.findViewById(R.id.tv_createtime);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+//                    startActivity(new Intent(ProjectActivity.this,BugListActivity.class));
+                }
+            });
         }
     }
 

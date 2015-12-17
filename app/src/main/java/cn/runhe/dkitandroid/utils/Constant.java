@@ -41,4 +41,8 @@ public class Constant {
      * 上传图片IP地址
      */
     public static final int UPLOAD_SERVER_PORT = 7002;
+    /**
+     * 首选项文件名
+     */
+    public static final String SP_NAME_LOGIN = "dkitandroid.txt";
 }
