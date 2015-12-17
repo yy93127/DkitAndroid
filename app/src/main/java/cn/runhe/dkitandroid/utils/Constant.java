@@ -8,7 +8,7 @@ public class Constant {
     /**
      * 主机地址
      */
-    public static final String LOCAL_HOST = "http://192.168.1.99:7002/service/ ";
+    public static final String LOCAL_HOST = "http://192.168.1.99:7002/service/";
     /**
      * 登陆
      */
