@@ -3,37 +3,27 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_all"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="所有项目" />
+            android:id="@+id/nav_test"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="测试"
+            android:checked="true"/>
         <item
-            android:id="@+id/nav_tome"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="提给我的" />
+            android:id="@+id/nav_dev"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:title="开发" />
         <item
-            android:id="@+id/nav_resolved"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="已解决" />
-        <item
-            android:id="@+id/nav_unresolved"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="未解决" />
-        <item
-            android:id="@+id/nav_close"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="已关闭" />
+            android:id="@+id/nav_talk"
+            android:icon="@android:drawable/ic_menu_myplaces"
+            android:title="聊天" />
+
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_exit"
+                android:icon="@android:drawable/ic_dialog_alert"
+                android:title="退出" />
         </menu>
     </item>
 

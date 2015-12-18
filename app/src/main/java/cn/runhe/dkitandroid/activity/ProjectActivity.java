@@ -1,6 +1,5 @@
 package cn.runhe.dkitandroid.activity;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -122,7 +121,7 @@ public class ProjectActivity extends AppCompatActivity {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = View.inflate(ProjectActivity.this, R.layout.item_projects_recyclerview, null);
+            View itemView = View.inflate(ProjectActivity.this, R.layout.item_project_recyclerview, null);
             ViewHolder viewHolder = new ViewHolder(itemView);
             return viewHolder;
         }

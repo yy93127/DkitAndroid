@@ -31,7 +31,15 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.BugListActivity"
+            android:label="@string/title_activity_bug_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.TalkActivity"
+            android:label="@string/title_activity_talk"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

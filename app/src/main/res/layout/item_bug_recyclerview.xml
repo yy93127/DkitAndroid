@@ -14,16 +14,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="项目名称："
+            android:text="BUG标题："
             android:textColor="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/tv_projectname"
+            android:id="@+id/tv_bug_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLength="20"
             android:maxLines="1"
-            android:text="李俊旭_android_1.0版"
+            android:text="首页信息显示缺失"
             android:textColor="@android:color/tertiary_text_dark" />
     </LinearLayout>
 
@@ -36,14 +35,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="版本："
+            android:text="BUG状态："
             android:textColor="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/tv_version"
+            android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1.0"
+            android:text="已解决"
             android:textColor="@android:color/tertiary_text_dark" />
 
         <TextView

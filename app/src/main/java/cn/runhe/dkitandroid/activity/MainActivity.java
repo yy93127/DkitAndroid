@@ -1,9 +1,11 @@
 package cn.runhe.dkitandroid.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +27,8 @@ import com.squareup.okhttp.RequestBody;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.runhe.dkitandroid.R;
 import cn.runhe.dkitandroid.domain.LoginUserInfo;
@@ -34,8 +38,7 @@ import cn.runhe.dkitandroid.utils.HttpUtil;
 import cn.runhe.dkitandroid.utils.LogUtil;
 import cn.runhe.dkitandroid.utils.SPUtil;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener {
 
     private RecyclerView recyclerview;
     public HttpUtil httpUtil;
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity
     private GetDataTask mTask;
     private MyAdapter mAdapter;
     private View loading;
+    private List<ProjectListInfo.RowsEntity> rowsProject;
+    private LoginUserInfo loginUserInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,27 +72,31 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(0);
+        View headerView = navigationView.getHeaderView(0);//获取侧滑菜单中的头布局
         navigationView.setNavigationItemSelectedListener(this);
 
-        initViewData();
+        initViewData(headerView);
     }
 
-    private void initViewData() {
+    private void initViewData(View view) {
         loading = findViewById(R.id.loading_dialog);
         recyclerview = (RecyclerView) findViewById(R.id.recyclerview_main);
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
-//        TextView nickname = (TextView) findViewById(R.id.tv_nickname);
-//        TextView tip = (TextView) findViewById(R.id.tv_tip);
+
         httpUtil = new HttpUtil();
         gson = new Gson();
         RequestBody body = new FormEncodingBuilder().add("pageNum", "1").add("pageSize", "999").build();
-        mTask = new GetDataTask(Constant.QUERY_BUG_PROJECT,body);
+        mTask = new GetDataTask(Constant.QUERY_BUG_PROJECT, body);//默认显示所有项目
         mTask.execute((Void) null);
 
+        TextView nickname = (TextView) view.findViewById(R.id.tv_nickname);
+        TextView tip = (TextView) view.findViewById(R.id.tv_tip);
         String string = SPUtil.getString(MainActivity.this, Constant.SP_NAME_LOGIN);
-        LoginUserInfo loginUserInfo = gson.fromJson(string, LoginUserInfo.class);
-//        nickname.setText(loginUserInfo.nickname);
-//        tip.setText(loginUserInfo.tip);
+        loginUserInfo = gson.fromJson(string, LoginUserInfo.class);
+        nickname.setText(loginUserInfo.nickname);
+        tip.setText(loginUserInfo.tip);
+
     }
 
     private class GetDataTask extends AsyncTask<Void, Void, String> {
@@ -95,7 +104,7 @@ public class MainActivity extends AppCompatActivity
         private String url;
         private RequestBody body;
 
-        public GetDataTask(String url,RequestBody body) {
+        public GetDataTask(String url, RequestBody body) {
             this.url = url;
             this.body = body;
         }
@@ -135,14 +144,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void processData(String result) {
-        if (! result.equals(HttpUtil.REQUEST_ERROR)) {
+        if (!result.equals(HttpUtil.REQUEST_ERROR)) {
             ProjectListInfo projectListInfo = gson.fromJson(result, ProjectListInfo.class);
-            List<ProjectListInfo.RowsEntity> rows = projectListInfo.rows;
+            rowsProject = projectListInfo.rows;
             if (mAdapter == null) {
                 mAdapter = new MyAdapter();
-                mAdapter.setList(rows);
+                mAdapter.setList(rowsProject);
+                mAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void setOnItemClick(View view, int position) {
+                        Intent intent = new Intent();
+                        intent.putExtra("project_uuid", rowsProject.get(position).uuid);
+                        intent.setClass(MainActivity.this, BugListActivity.class);
+                        LogUtil.i(MainActivity.this, position + "-------" + rowsProject.get(position).uuid);
+                        startActivity(intent);
+                    }
+                });
                 recyclerview.setAdapter(mAdapter);
-            }else {
+            } else {
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -151,28 +170,43 @@ public class MainActivity extends AppCompatActivity
     private class MyAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         private List<ProjectListInfo.RowsEntity> list;
+        private OnItemClickListener mOnitemClicklister;
 
         public void setList(List<ProjectListInfo.RowsEntity> list) {
             this.list = list;
         }
 
+        public void setOnItemClickListener(OnItemClickListener listener) {
+            this.mOnitemClicklister = listener;
+        }
+
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = View.inflate(MainActivity.this, R.layout.item_projects_recyclerview, null);
+        public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+            View itemView = View.inflate(MainActivity.this, R.layout.item_project_recyclerview, null);
             return new ViewHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.projectName.setText(list.get(position).project_name);
             holder.version.setText(list.get(position).project_version);
             holder.createTime.setText(list.get(position).create_time);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnitemClicklister.setOnItemClick(v, position);
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
             return list.size();
         }
+    }
+
+    public interface OnItemClickListener {
+        void setOnItemClick(View view, int position);
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
@@ -186,13 +220,6 @@ public class MainActivity extends AppCompatActivity
             projectName = (TextView) itemView.findViewById(R.id.tv_projectname);
             version = (TextView) itemView.findViewById(R.id.tv_version);
             createTime = (TextView) itemView.findViewById(R.id.tv_createtime);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    int position = getAdapterPosition();
-//                    startActivity(new Intent(ProjectActivity.this,BugListActivity.class));
-                }
-            });
         }
     }
 
@@ -202,7 +229,28 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            exitBy2Click();
+        }
+    }
+
+    private static Boolean isExit = false;
+
+    private void exitBy2Click() {
+        Timer tExit;
+        if (!isExit) {
+            isExit = true; // 准备退出
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            tExit = new Timer();
+            tExit.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    isExit = false; // 取消退出
+                }
+            }, 2000); // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
+
+        } else {
+            finish();
+            System.exit(0);
         }
     }
 
@@ -234,21 +282,34 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        RequestBody body;
+        String url;
 
-        if (id == R.id.nav_all) {
-            Toast.makeText(MainActivity.this, "所有项目", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_tome) {
-            Toast.makeText(MainActivity.this, "提给我的", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_resolved) {
-            Toast.makeText(MainActivity.this, "已解决", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_unresolved) {
-            Toast.makeText(MainActivity.this, "未解决", Toast.LENGTH_SHORT).show();    
-        } else if (id == R.id.nav_close) {
-            Toast.makeText(MainActivity.this, "已关闭", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_share) {
+        switch (id) {
+            case R.id.nav_test:
+                url = Constant.QUERY_BUG_PROJECT;
+                body = new FormEncodingBuilder().add("pageNum", "1").add("pageSize", "999").build();
+                mTask = new GetDataTask(url, body);
+                mTask.execute((Void) null);
+                break;
+            case R.id.nav_dev:
+                Toast.makeText(MainActivity.this, "该功能正在开发中，敬请期待", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_talk:
+//                Toast.makeText(MainActivity.this, "该功能正在开发中，敬请期待", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.putExtra("user_uuid",loginUserInfo.uuid);
+                intent.setClass(MainActivity.this,TalkActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_exit:
+                SPUtil.putString(MainActivity.this, Constant.SP_NAME_LOGIN, "");
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+                break;
 
-        } else if (id == R.id.nav_send) {
-
+            default:
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
