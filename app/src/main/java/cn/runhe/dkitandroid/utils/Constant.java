@@ -44,5 +44,6 @@ public class Constant {
     /**
      * 首选项文件名
      */
-    public static final String SP_NAME_LOGIN = "dkitandroid.txt";
+    public static final String SP_NAME_LOGIN = "userlogin.txt";
+    public static final String SP_USER_CLIENT = "userclient.txt";
 }

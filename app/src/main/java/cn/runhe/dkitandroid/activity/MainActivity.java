@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "暂时没啥用", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
             }
         });

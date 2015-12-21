@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -27,11 +28,118 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/ll_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rl_bug_post"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/tv1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="提出："
+                    android:textSize="@dimen/activity_horizontal_margin"/>
+
+                <TextView
+                    android:id="@+id/tv_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/tv1"
+                    android:drawableRight="@android:drawable/arrow_down_float"
+                    android:text="全部"
+                    android:textSize="@dimen/activity_horizontal_margin"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_bug_deal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/appbar_padding_top"
+                android:paddingTop="@dimen/appbar_padding_top">
+
+                <TextView
+                    android:id="@+id/tv2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="处理："
+                    android:textSize="@dimen/activity_horizontal_margin"/>
+
+                <TextView
+                    android:id="@+id/tv_deal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/tv2"
+                    android:drawableRight="@android:drawable/arrow_down_float"
+                    android:text="全部"
+                    android:textSize="@dimen/activity_horizontal_margin"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_bug_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/appbar_padding_top"
+                android:paddingTop="@dimen/appbar_padding_top">
+
+                <TextView
+                    android:id="@+id/tv3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="状态："
+                    android:textSize="@dimen/activity_horizontal_margin"/>
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/tv3"
+                    android:drawableRight="@android:drawable/arrow_down_float"
+                    android:text="全部"
+                    android:textSize="@dimen/activity_horizontal_margin"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/line"
+            android:layout_below="@+id/ll_head"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_below="@+id/line"
+            android:id="@+id/recyclerview_bug"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_vertical_margin"/>
+
+        <include
+            layout="@layout/request_dialog"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -39,6 +147,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:src="@android:drawable/ic_dialog_dialer"/>
 
 </android.support.design.widget.CoordinatorLayout>
