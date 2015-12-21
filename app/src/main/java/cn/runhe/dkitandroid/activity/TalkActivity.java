@@ -1,6 +1,5 @@
 package cn.runhe.dkitandroid.activity;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.util.List;
 
 import cn.runhe.dkitandroid.R;
-import cn.runhe.dkitandroid.domain.ProjectListInfo;
 import cn.runhe.dkitandroid.domain.UserListInfo;
 import cn.runhe.dkitandroid.utils.Constant;
 import cn.runhe.dkitandroid.utils.HttpUtil;
