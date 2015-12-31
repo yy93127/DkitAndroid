@@ -376,8 +376,20 @@ public class BugListActivity extends AppCompatActivity implements View.OnClickLi
                                     .add("project_uuid", project_uuid).add("bug_create_user_uuid",user_uuid).build();
                             break;
                         case R.id.rl_bug_status:
+                            String status_id;
                             tv_status.setText(list.get(position));
                             String status = (String) tv_status.getText();
+                            if ("全部".equals(status)) {
+                                status_id = "";
+                            } else if ("已解决".equals(status)) {
+                                status_id = "2";
+                            } else if ("未解决".equals(status)) {
+                                status_id = "1";
+                            } else if ("已关闭".equals(status)){
+                                status_id = "3";
+                            }
+                            body = new FormEncodingBuilder().add("pageNum", "1").add("pageSize", "999")
+                                    .add("project_uuid", project_uuid).add("bug_status",status).build();
                             break;
                         default:
                             break;
@@ -398,7 +410,9 @@ public class BugListActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        window.dismiss();
-        window = null;
+        if (window!=null) {
+            window.dismiss();
+            window = null;
+        }
     }
 }
